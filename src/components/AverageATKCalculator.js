@@ -205,9 +205,18 @@ const AverageATKCalculator = () => {
                     {selectedCharacter && selectedCharacter.getName && (
                         <Grid.Column>
                             <h2 style={{ fontFamily: 'Noto Sans CJK KR', fontSize: 36 }}>
-                                <Image src={selectedCharacter.getElementIcon()} style={{ display: 'flex', position: 'absolute'}} />
                                 {selectedCharacter.getName()}
                             </h2>
+                            <Image
+                                avatar
+                                src={selectedCharacter.getElementIcon()}
+                                style={{
+                                    display: 'flex',
+                                    position: 'absolute',
+                                    backgroundColor: 'black',
+                                    top: 50,
+                                    zIndex: 1,
+                                }} />
                             <Image src={selectedCharacter.getImage()} size='large' alt={selectedCharacter.getName()} rounded />
                         </Grid.Column>
                     )}
@@ -355,6 +364,7 @@ const AverageATKCalculator = () => {
             </Form>
             {selectedCharacter && (
                 <Modal
+                    style={{ minWidth: 400 }}
                     onClose={() => setOpenModal(false)}
                     onOpen={() => setOpenModal(true)}
                     open={openModal}

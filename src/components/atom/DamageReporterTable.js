@@ -22,18 +22,20 @@ const DamageReporterTable = ({
     <Grid.Row verticalAlign='middle' columns={2}>
       <Grid.Column>
         <Grid.Row>
-          {icon && (
-            <Image src={icon} avatar style={{
-              display: 'flex',
-              position: 'absolute',
-              left: 30,
-            }} />
-          )}
           <Header size='large' textAlign='center' style={{ fontFamily: 'Noto Sans CJK KR', fontSize: 32 }}>{labelTranslator(title)}</Header>
         </Grid.Row>
       </Grid.Column>
       <Grid.Column>
         <Message attached floating>
+          {icon && (
+              <Image src={icon} avatar style={{
+                display: 'flex',
+                position: 'absolute',
+                backgroundColor: 'black',
+                left: -5,
+                top: -5,
+              }} />
+            )}
           <Grid.Row style={{ margin: 16 }}>
             <Header as='h2' textAlign='center' style={{ fontFamily: 'Noto Sans CJK KR', fontSize: 24 }}>데미지: {Math.floor(attack * resistance_rate)}</Header>
           </Grid.Row>

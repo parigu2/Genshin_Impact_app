@@ -52,6 +52,7 @@ const DamageReporter = ({
                 <DamageReporterTable
                     title={reaction}
                     resistance_rate={resistance_rate}
+                    icon={element ? icon : null}
                     {...damage} />
               )
           })}
