@@ -48,6 +48,7 @@ export default class Base {
     this.SKILL_RATE_CHARGED = SKILL_RATE_CHARGED
     this.SKILL_RATE_E = SKILL_RATE_E
     this.SKILL_RATE_Q = SKILL_RATE_Q
+    this.artifacts = [undefined, undefined]
   }
   
   getCharacterSpec() {
@@ -66,6 +67,14 @@ export default class Base {
     if (typeof ACSENTION === 'boolean') {
       this.ACSENTION = ACSENTION
     }
+  }
+
+  setArtifacts(artifacts) {
+    this.artifacts = artifacts
+  }
+
+  getArtifacts() {
+    return this.artifacts
   }
 
   setBaseCharacterSpec({

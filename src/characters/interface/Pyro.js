@@ -9,6 +9,7 @@ import {
   calculateAmplificationReaction,
   calculateSaltationReaction,
   calculateBaseDamage,
+  ensureNumeric,
 } from '../../util'
 
 export default class Pyro extends Base {
@@ -70,8 +71,26 @@ export default class Pyro extends Base {
   getElementalDamage(skill_rate) {
     const { PYRO_DMG_BONUS } = this.getCharacterSpec()
     const { attack, maxAttack, averageAttack } = this.getAverageDamage(skill_rate)
+    const [set1, set2] = this.getArtifacts()
+    let isSame
+    if (set1 && set2) {
+      isSame = set1.getName() === set2.getName()
+    }
 
-    const element_damage_rate = 1 + percentToNumber(PYRO_DMG_BONUS)
+    let additional_pyro_dmg_bonus = 0
+
+    if (set1) {
+      additional_pyro_dmg_bonus += ensureNumeric(set1.getSet2Effects('PYRO_DMG_BONUS'))
+    }
+
+    if (set2) {
+      additional_pyro_dmg_bonus += ensureNumeric(set2.getSet4Effects('PYRO_DMG_BONUS'))
+      if (!isSame) {
+        additional_pyro_dmg_bonus += ensureNumeric(set2.getSet2Effects('PYRO_DMG_BONUS'))
+      }
+    }
+
+    const element_damage_rate = 1 + percentToNumber(ensureNumeric(PYRO_DMG_BONUS) + additional_pyro_dmg_bonus)
 
     return {
       attack: Math.floor(attack * element_damage_rate),
@@ -83,13 +102,24 @@ export default class Pyro extends Base {
   getElementReactionDamage(skill_rate) {
     const { LEVEL, ELEMENTAL_MASTERY, ACSENTION } = this.getCharacterSpec()
 
+    const [set1, set2] = this.getArtifacts()
+    let isSame
+    if (set1 && set2) {
+      isSame = set1.getName() === set2.getName()
+    }
+
     const { amplification, saltation } = this.getElementReaction()
     const { attack, maxAttack, averageAttack } = this.getElementalDamage(skill_rate)
     const calculatedAmpliificationReaction = Object.entries(ensureObject(amplification)).reduce((previousReaction, [reaction, ratio]) => {
       const calculatedRatio = calculateAmplificationReaction({
         ratio,
         ELEMENTAL_MASTERY,
-        additionalEffect: this[reaction]
+        // additionalEffect: this[reaction]
+        ...(set1 && set2) && {
+          additionalEffect: isSame
+            ? ensureNumeric(set1.getSet2Effects(reaction)) + ensureNumeric(set1.getSet4Effects(reaction))
+            : ensureNumeric(set1.getSet2Effects(reaction)) + ensureNumeric(set2.getSet2Effects(reaction))
+        }
       })
 
       return {
@@ -107,7 +137,12 @@ export default class Pyro extends Base {
       const calculatedReactionDMG = calculateSaltationReaction({
         base_dmg,
         ELEMENTAL_MASTERY,
-        additionalEffect: this[reaction]
+        // additionalEffect: this[reaction]
+        ...(set1 && set2) && {
+          additionalEffect: isSame
+            ? ensureNumeric(set1.getSet2Effects(reaction)) + ensureNumeric(set1.getSet4Effects(reaction))
+            : ensureNumeric(set1.getSet2Effects(reaction)) + ensureNumeric(set2.getSet2Effects(reaction))
+        }
       })
       return {
         ...previousReaction,
