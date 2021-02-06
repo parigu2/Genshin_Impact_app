@@ -5,6 +5,7 @@ import { percentToNumber } from '../../../util/display'
 export class NoblesseOblige extends Artifact {
   constructor() {
     super()
+    this.rarity = 5
     this.set = {
       2: {
         label: '2-set',
@@ -32,6 +33,6 @@ export class NoblesseOblige extends Artifact {
   }
 
   getName() {
-    return '왕실'
+    return '옛 왕실의 의식'
   }
 }

@@ -5,6 +5,7 @@ export class Lavawalker extends Artifact {
     super()
     this.pyroEffected = false
     this.ADDITIONAL_DMG_BONUS = 0
+    this.rarity = 5
     this.set = {
       2: {
         label: '2-set',
@@ -30,6 +31,6 @@ export class Lavawalker extends Artifact {
   }
 
   getName() {
-    return '현인'
+    return '불 위를 걷는 현인'
   }
 }

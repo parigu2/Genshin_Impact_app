@@ -5,6 +5,7 @@ export class CrimsonWitchOfFlames extends Artifact {
   constructor() {
     super()
     this.stack = 0
+    this.rarity = 5
     this.set = {
       2: {
         label: '2-set',
@@ -44,7 +45,7 @@ export class CrimsonWitchOfFlames extends Artifact {
   }
 
   getName() {
-    return '마녀'
+    return '불타오르는 화염의 마녀'
   }
 
   getSet2Effects() {

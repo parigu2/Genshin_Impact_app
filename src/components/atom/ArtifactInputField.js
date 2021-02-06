@@ -18,7 +18,12 @@ const ArtifactInputField = ({
   onChange = () => {},
 }) => {
   const [open, setOpen] = useState(false)
+  const [option1Value, setOption1Value] = useState({})
+  const [option2Value, setOption2Value] = useState({})
+  console.log("🚀 ~ file: ArtifactInputField.js ~ line 23 ~ option2Value", option2Value)
+
   const [set1, set2] = artifacts
+  console.log("🚀 ~ file: ArtifactInputField.js ~ line 22 ~ artifacts", artifacts)
 
   const {
     option1,
@@ -62,6 +67,7 @@ const ArtifactInputField = ({
       set_2,
       set_2_option,
     }
+    // eslint-disable-next-line
   }, [artifacts])
 
   return (
@@ -100,10 +106,54 @@ const ArtifactInputField = ({
             <div>
               <p>{set_1.description}</p>
               {set_1_option.map(([label, option]) => {
-                console.log("🚀 ~ file: ArtifactInputField.js ~ line 93 ~ {set_1_option.map ~ option", option)
-                const { type } = ensureObject(option)
+                const { type, maxStack, helper } = ensureObject(option)
+                let component
+                switch (type) {
+                  case 'input':
+                    component = <input
+                      type='number'
+                      value={option1Value[label]}
+                      onChange={({ target: { value } }) => {
+                        helper(Number(value))
+                        setOption1Value({
+                          ...option2Value,
+                          [label]: value
+                        })
+                      }} />
+                    break
+                  case 'boolean':
+                    component = <Checkbox
+                      checked={option1Value[label]}
+                      onClick={(event, { checked }) =>{
+                        helper(checked)
+                        setOption1Value({
+                          ...option2Value,
+                          [label]: checked
+                        })
+                      }} />
+                    break
+                  case 'stack':
+                    component = <Rating
+                      icon='star'
+                      maxRating={maxStack}
+                      clearable
+                      value={option1Value[label]}
+                      onRate={(event, { rating }) => {
+                        helper(rating)
+                        setOption1Value({
+                          ...option2Value,
+                          [label]: rating
+                        })
+                      }} />
+                    break
+                  default:
+                    break
+                }
                 return (
-                  <div>option1</div>
+                  <div>
+                    {label}
+                    {component}
+                  </div>
                 )
               })}
             </div>
@@ -117,15 +167,41 @@ const ArtifactInputField = ({
                 let component
                 switch (type) {
                   case 'input':
-                    component = <input type='number' onChange={({ target: { value } }) => {
-                      helper(Number(value))
-                    }} />
+                    component = <input
+                      type='number'
+                      value={option2Value[label]}
+                      onChange={({ target: { value } }) => {
+                        helper(Number(value))
+                        setOption2Value({
+                          ...option2Value,
+                          [label]: value
+                        })
+                      }} />
                     break
                   case 'boolean':
-                    component = <Checkbox onClick={(event, { checked }) => helper(checked)} />
+                    component = <Checkbox
+                      checked={option2Value[label]}
+                      onClick={(event, { checked }) =>{
+                        helper(checked)
+                        setOption2Value({
+                          ...option2Value,
+                          [label]: checked
+                        })
+                      }} />
                     break
                   case 'stack':
-                    component = <Rating icon='star' maxRating={maxStack} clearable onRate={(event, { rating }) => helper(rating)} />
+                    component = <Rating
+                      icon='star'
+                      maxRating={maxStack}
+                      clearable
+                      value={option2Value[label]}
+                      onRate={(event, { rating }) => {
+                        helper(rating)
+                        setOption2Value({
+                          ...option2Value,
+                          [label]: rating
+                        })
+                      }} />
                     break
                   default:
                     break

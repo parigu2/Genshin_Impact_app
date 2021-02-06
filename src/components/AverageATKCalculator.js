@@ -35,6 +35,7 @@ import effectInfo from '../util/img/additional_effect_calculation_info.png'
 import CharacterSpecInput from '../components/atom/CharacterSpecInput'
 import DamageReporter from '../components/atom/DamageReporter'
 import MonsterSpec from '../components/atom/MonsterSpec'
+import ArtifactInputField from '../components/atom/ArtifactInputField'
 
 const charactersList = Object.entries(characters).map(([name, character]) => ({  text: character.getName(), value: name,  image: { avatar: true, src: character.getIcon() } }))
 
@@ -47,6 +48,7 @@ const AverageATKCalculator = () => {
         physical_resistance: 10,
         element_resistance: 10
     })
+    const [artifacts, setArtifacts] = useState([undefined, undefined])
 
     useEffect(() => {
         if (selectedCharacter) {
@@ -111,6 +113,20 @@ const AverageATKCalculator = () => {
             element_resistance_rate: def_rate * (1 - percentToNumber(element_resistance)),
         }
     }, [LEVEL, monster_level, physical_resistance, element_resistance])
+
+    const {
+        selectedArtifact
+    } = useMemo(() => {
+        let selectedArtifact
+        if (artifacts) {
+            selectedArtifact = artifacts
+        }
+
+        console.log("🚀 ~ file: AverageATKCalculator.js ~ line 129 ~ AverageATKCalculator ~ selectedArtifact", selectedArtifact)
+        return {
+            selectedArtifact
+        }
+    }, [artifacts])
 
     const handleInputValueChange = (spec, value) => {
         if (Math.floor(value) >= 0) {
@@ -238,6 +254,9 @@ const AverageATKCalculator = () => {
                                         character.setCharacterSpec(selectedCharacter.getCharacterSpec())
                                     }
                                 }} />
+                            {selectedCharacter && (
+                                <ArtifactInputField artifacts={artifacts} onChange={setArtifacts} />
+                            )}
                             {!selectedCharacter && (
                                 <List bulleted style={{ fontFamily: 'Noto Sans CJK KR', fontWeight:500, fontSize: 16 }}>
                                     <List.Item content='공격력과 하나 이상의 스킬 퍼센트 계수는 필수 항목입니다'/>
@@ -372,7 +391,10 @@ const AverageATKCalculator = () => {
                         <Button
                             primary
                             disabled={isDisabled}
-                            onClick={() => setInputValue(selectedCharacter.getCharacterSpec())}>
+                            onClick={() => {
+                                selectedCharacter.setArtifacts(selectedArtifact)
+                                setInputValue(selectedCharacter.getCharacterSpec())
+                            }}>
                             계산!
                         </Button>
                     }>

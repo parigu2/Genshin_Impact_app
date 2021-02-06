@@ -6,6 +6,7 @@ export class BlizzardStrayer extends Artifact {
     this.cyroEffected = false
     this.fronzenEffected = false
     this.ADDITIONAL_CRIT_RATE_BONUS = 0
+    this.rarity = 5
     this.set = {
       2: {
         label: '2-set',
@@ -41,6 +42,6 @@ export class BlizzardStrayer extends Artifact {
   }
 
   getName() {
-    return '얼음'
+    return '얼음바람 속에서 길잃은 용사'
   }
 }
